@@ -5,6 +5,7 @@ const ssmgrPath = path.resolve(os.homedir(), '.ssmgr');
 const logPath = path.resolve(os.homedir(), '.ssmgr', 'logs');
 const log4js = require('log4js');
 
+// 日志类型，应该是根据pligins不同进行打印
 const category = [
   'system',
   'account',
@@ -35,7 +36,7 @@ log4js.configure(configure);
 
 const setConsoleLevel = level => {
   configure.appenders.filter = { type: 'logLevelFilter', appender: 'console', level };
-  log4js.configure(configure);
+  log4js.configure(configure); // 重新配置log4js
 };
 
 const setFileAppenders = (filename) => {

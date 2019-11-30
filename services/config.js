@@ -1,3 +1,5 @@
+// config处理器，支持json和yaml格式
+
 const yaml = require('js-yaml');
 const fs   = require('fs');
 const os   = require('os');

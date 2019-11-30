@@ -23,22 +23,23 @@ process.on('uncaughtException', (err) => {
 });
 
 const startWorker = async () => {
-  require('./init/utils');
+  require('./init/utils'); // 全局定义，如appRequire()
 
-  require('./init/moveConfigFile');
-  require('./init/checkConfig');
-  require('./init/knex');
+  require('./init/moveConfigFile'); // 复制默认的配置文件default.yml到HOME下
+  require('./init/checkConfig'); // 读取yml参数
+  require('./init/knex'); // 数据库操作
 
-  const initDb = require('./init/loadModels').init;
+  const initDb = require('./init/loadModels').init; // 创建models目录下的基本的数据table
   const runShadowsocks = require('./init/runShadowsocks').run;
   await initDb();
   await runShadowsocks();
-  require('./init/loadServices');
-  require('./init/loadPlugins');
+  require('./init/loadServices'); // 根据m端还是s端，运行不同的实例
+  require('./init/loadPlugins'); // 载入plugins下的插件
   process.send('Worker start');
 };
 
 if(cluster.isMaster) {
+  // 主进程用于管理子进程
   process.env.mainWorker = 1;
   cluster.fork();
   cluster.on('message', (worker, message, handle) => {
@@ -69,6 +70,7 @@ if(cluster.isMaster) {
     }
   });
 } else {
+  // 子进程进行s端或者m端操作
   startWorker();
 }
 

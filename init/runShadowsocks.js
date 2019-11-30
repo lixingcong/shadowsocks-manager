@@ -1,3 +1,5 @@
+// 运行ss的命令参数都在这里，可以任意加入参数和指定二进制
+
 const log4js = require('log4js');
 const logger = log4js.getLogger('system');
 

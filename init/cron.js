@@ -1,3 +1,5 @@
+// 依赖redis定期执行Cron任务
+
 const log4js = require('log4js');
 const logger = log4js.getLogger('system');
 const later = require('later');

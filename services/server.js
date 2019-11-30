@@ -1,3 +1,5 @@
+// 运行的服务端（S端）监听并被动接受命令
+
 const log4js = require('log4js');
 const logger = log4js.getLogger('system');
 

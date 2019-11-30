@@ -12,7 +12,7 @@ const loadOnePluginDb = name => {
   logger.info(`Load plugin db: [ ${ name } ]`);
   try {
     const files = fs.readdirSync(path.resolve(__dirname, `../plugins/${ name }`));
-    if(files.indexOf('db') >= 0) {
+    if(files.indexOf('db') >= 0) { // 插件若有数据库db目录，就立即创建表
       const dbFiles = fs.readdirSync(path.resolve(__dirname, `../plugins/${ name }/db`));
       dbFiles.forEach(f => {
         logger.info(`Load plugin db: [ ${ name }/db/${ f } ]`);

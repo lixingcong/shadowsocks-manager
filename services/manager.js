@@ -1,3 +1,5 @@
+// 管理端（M端）主动发送命令的实现，主要导出send方法
+
 const log4js = require('log4js');
 const logger = log4js.getLogger('system');
 

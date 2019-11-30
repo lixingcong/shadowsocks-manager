@@ -1,3 +1,5 @@
+// shadowsocks控制，如增删用户、修改密码、获取当前流量等
+
 const log4js = require('log4js');
 const logger = log4js.getLogger('system');
 const later = require('later');
