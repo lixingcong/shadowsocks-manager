@@ -370,7 +370,7 @@ const getIp = port => {
     cmd = `netstat -an | sls -Pattern ':${ port } ' | sls -Pattern 'ESTABLISHED' | %{$_.Line.Split(' ',[System.StringSplitOptions]::RemoveEmptyEntries)[2]} | %{$_.Split(':')[0]} | sls -Pattern '127\\.0\\.0\\.1' -NotMatch | unique | %{$_.Line}`;
     shell = 'powershell';
   } else {
-    cmd = `ss -an | grep ':${ port } ' | grep ESTAB | awk '{print $6}' | cut -d: -f1 | grep -v 127.0.0.1 | uniq -d`;
+    cmd = `ss -an | grep ':${ port } ' | grep ESTAB | awk '{print $6}' | cut -d: -f1 | sort | uniq`;
     shell = '/bin/sh';
   }
   return new Promise((resolve, reject) => {
@@ -394,7 +394,7 @@ const getClientIp = port => {
   });
   const result = [];
   clientIp.filter(f => {
-    return Date.now() - f.time <= 15 * 60 * 1000 && f.port === port;
+    return f.port === port;
   }).map(m => {
     return m.ip;
   }).forEach(f => {
