@@ -31,8 +31,10 @@ const startWorker = async () => {
 
   const initDb = require('./init/loadModels').init; // 创建models目录下的基本的数据table
   const runShadowsocks = require('./init/runShadowsocks').run;
+  const runSSTunnel = require('./init/tunnel').run;
   await initDb();
   await runShadowsocks();
+  await runSSTunnel();
   require('./init/loadServices'); // 根据m端还是s端，运行不同的实例
   require('./init/loadPlugins'); // 载入plugins下的插件
   process.send('Worker start');
