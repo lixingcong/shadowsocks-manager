@@ -17,6 +17,7 @@ const config = appRequire('services/config').all();
 const host = config.shadowsocks.address.split(':')[0];
 const port = +config.shadowsocks.address.split(':')[1];
 const mPort = +config.manager.address.split(':')[1];
+const useConntrack = config.manager.useConntrack;
 
 client.bind(mPort);
 
@@ -370,7 +371,11 @@ const getIp = port => {
     cmd = `netstat -an | sls -Pattern ':${ port } ' | sls -Pattern 'ESTABLISHED' | %{$_.Line.Split(' ',[System.StringSplitOptions]::RemoveEmptyEntries)[2]} | %{$_.Split(':')[0]} | sls -Pattern '127\\.0\\.0\\.1' -NotMatch | unique | %{$_.Line}`;
     shell = 'powershell';
   } else {
-    cmd = `ss -an | grep ':${ port } ' | grep ESTAB | awk '{print $6}' | cut -d: -f1 | sort | uniq`;
+    if(useConntrack){
+      cmd = `conntrack -L | grep ESTABLISHED | grep dport=${ port } | awk '{print $5}' | sed -e "s/src=//" | sort | uniq`;
+    }else{
+      cmd = `ss -an | grep ':${ port } ' | grep ESTAB | awk '{print $6}' | cut -d: -f1 | sort | uniq`;
+    }
     shell = '/bin/sh';
   }
   return new Promise((resolve, reject) => {
@@ -390,7 +395,7 @@ const getIp = port => {
 
 const getClientIp = port => {
   clientIp = clientIp.filter(f => {
-    return Date.now() - f.time <= 15 * 60 * 1000;
+    return Date.now() - f.time <= 15 * 60 * 1000; // 15分钟内
   });
   const result = [];
   clientIp.filter(f => {
