@@ -372,7 +372,8 @@ const getIp = port => {
     shell = 'powershell';
   } else {
     if(useConntrack){
-      cmd = `conntrack -L | grep ESTABLISHED | grep dport=${ port } | awk '{print $5}' | sed -e "s/src=//" | sort | uniq`;
+      // 需要先安装conntrack且只以root运行，涉及到内核对网络的转发
+      cmd = `conntrack -L | grep ESTABLISHED | grep 'dport=${ port }' | awk '{print $5}' | sed -e 's/src=//' | sort | uniq`;
     }else{
       cmd = `ss -an | grep ':${ port } ' | grep ESTAB | awk '{print $6}' | cut -d: -f1 | sort | uniq`;
     }
